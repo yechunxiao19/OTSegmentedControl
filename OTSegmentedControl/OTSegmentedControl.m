@@ -22,23 +22,20 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.count = 0;
-        [self setBackgroundColor:[UIColor clearColor]];
-        self.selectedImage = [[UIImage imageNamed:@"segmentCtrlBg_S"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
+        [self setBackgroundColor:[UIColor whiteColor]];
+        self.selectedImage = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"segmentCtrlBg_S"] stretchableImageWithLeftCapWidth:9 topCapHeight:0]];
         
         self.buttonArr = [[NSMutableArray alloc] init];
         self.viewWidth = self.frame.size.width;
         self.viewHeight = self.frame.size.height;
         
-        self.bg = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"segmentCtrlBg_S"] stretchableImageWithLeftCapWidth:9 topCapHeight:0]];
-        [self.bg setTag:1000];
-        self.lineImage = [UIImage imageNamed:@"segmentCtrlBg_S"];
+        self.bg = [[UIImageView alloc] init];
         self.bg.frame = CGRectMake(0, 0, self.viewWidth, self.viewHeight);
         [self addSubview:self.bg];
         
-        self.lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.viewWidth, self.viewHeight)];
-        [self addSubview:self.lineView];
         self.transView = [[UIView alloc] init];
-        self.transView.backgroundColor = [UIColor whiteColor];
+        self.transView.backgroundColor = [UIColor clearColor];
+        [self.transView addSubview:self.selectedImage];
         [self addSubview:self.transView];
     }
     return self;
@@ -52,18 +49,16 @@
     self.viewWidth = self.frame.size.width;
     self.viewHeight = self.frame.size.height;
     self.bg.frame = CGRectMake(0, 0, self.viewWidth, self.viewHeight);
-    self.lineView.frame = CGRectMake(0, 0, self.viewWidth, self.viewHeight);
     [self updateButtonsFrameForOren];
 }
 
 -(void)insertSegmentWithTitle:(NSString *)title atIndex:(NSInteger)index{
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setBackgroundImage:nil forState:UIControlStateNormal];
-//    [button setBackgroundImage:self.selectedImage forState:UIControlStateSelected];
     [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [button setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
     [button setTitle:title forState:UIControlStateNormal];
-    button.titleLabel.font = [UIFont systemFontOfSize:13];
+    button.titleLabel.font = [UIFont systemFontOfSize:14];
     [button addTarget:self action:@selector(buttonSelected:) forControlEvents:UIControlEventTouchUpInside];
     [button setTag:index];
     [self.buttonArr addObject:button];
@@ -81,31 +76,18 @@
 
 -(void)updateButtonsFrame{
     self.count = self.buttonArr.count;
-    CGFloat allLineWidth = self.viewWidth - self.count * lineWidth;
-    CGFloat buttonWidth = allLineWidth/self.count;
+    CGFloat buttonWidth = self.viewWidth/self.count;
     CGFloat buttonOrignX = 0;
-    for (UIView *view in [self.lineView subviews])
-    {
-        if ([view isKindOfClass:[UIView class]])
-        {
-            [view removeFromSuperview];
-        }
-    }
-//    transView.frame = CGRectMake(0, self.frame.size.height - 3, viewWidth / count, 3);
+    
     self.transView.frame = CGRectMake(0, 0, self.viewWidth / self.count, self.frame.size.height);
+    self.selectedImage.frame = self.transView.frame;
     for (int i = 0; i < self.count; i++) {
         UIButton *button = [self.buttonArr objectAtIndex:i];
         button.frame = CGRectMake(buttonOrignX, 0, self.viewWidth / self.count, self.viewHeight);
         buttonOrignX += buttonWidth;
-        if (i < self.count - 1) {
-            UIImageView *lineImageView = [[UIImageView alloc] initWithImage:self.lineImage];
-            lineImageView.frame = CGRectMake(buttonOrignX, 0, lineWidth, self.viewHeight);
-            [self.lineView addSubview:lineImageView];
-            buttonOrignX += lineWidth;
-        }
         if (i == 0) {
             [button setSelected:YES];
-            [button setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
+            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             self.selectedButton = button;
         }
     }
@@ -114,27 +96,13 @@
 -(void)updateButtonsFrameForOren{
     self.selectedSegmentIndex = -1;
     self.count = self.buttonArr.count;
-    CGFloat allLineWidth = self.viewWidth - self.count * lineWidth;
-    CGFloat buttonWidth = allLineWidth/self.count;
+    CGFloat buttonWidth = self.viewWidth/self.count;
     CGFloat buttonOrignX = 0;
-    for (UIView *view in [self.lineView subviews])
-    {
-        if ([view isKindOfClass:[UIView class]])
-        {
-            [view removeFromSuperview];
-        }
-    }
     self.transView.frame = CGRectMake(0, self.frame.size.height - 3, self.viewWidth / self.count, 3);
     for (int i = 0; i < self.count; i++) {
         UIButton *button = [self.buttonArr objectAtIndex:i];
         button.frame = CGRectMake(buttonOrignX, 0, self.viewWidth / self.count, self.viewHeight);
         buttonOrignX += buttonWidth;
-        if (i < self.count - 1) {
-            UIImageView *lineImageView = [[UIImageView alloc] initWithImage:self.lineImage];
-            lineImageView.frame = CGRectMake(buttonOrignX, 0, lineWidth, self.viewHeight);
-            [self.lineView addSubview:lineImageView];
-            buttonOrignX += lineWidth;
-        }
     }
 }
 
@@ -145,7 +113,7 @@
     }
     self.selectedButton = sender;
     [sender setSelected:YES];
-    [self.selectedButton setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
+    [self.selectedButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 }
 
 -(void)buttonSelected:(UIButton *)sender{

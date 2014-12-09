@@ -8,19 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol MySegmentControlDelegate
+@protocol OTSegmentControlDelegate
 - (void)onSelectedButtonChanged:(NSInteger)index;
 @end
 
 @interface OTSegmentedControl : UIView
 
 @property (nonatomic, strong) NSMutableArray *buttonArr;
-@property (nonatomic, strong) UIImage *selectedImage;
-@property (nonatomic, strong) UIImage *lineImage;
+@property (nonatomic, strong) UIImageView *selectedImage;
 
 @property (nonatomic, strong) UIButton *selectedButton;
 @property (nonatomic, assign) NSInteger selectedSegmentIndex;
-@property (nonatomic, strong) UIView *lineView;
 @property (nonatomic, strong) UIView *transView;
 @property (nonatomic, assign) NSUInteger count;
 
@@ -34,6 +32,6 @@
 
 -(void)reloadView;
 
-@property(nonatomic,retain) id <MySegmentControlDelegate> delegate ;
+@property(nonatomic,retain) id <OTSegmentControlDelegate> delegate ;
 
 @end
